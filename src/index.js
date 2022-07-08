@@ -1,87 +1,67 @@
 const plugin = require('tailwindcss/plugin')
 
-const examplePlugin = plugin.withOptions(
-  function (options) {
-    const className = options ? options.className : 'markdown'
+const ionicPlugin = plugin(({ addBase, addComponents, addUtilities, theme }) => {
+  const colors = theme('colors')
+  const borderRadius = theme('borderRadius')
+  const spacing = theme('spacing')
 
-    return function ({ addBase, addUtilities, matchUtilities, addComponents, addVariant, theme }) {
-      /**
-       * Add base styles
-       * https://tailwindcss.com/docs/plugins#adding-base-styles
-       */
+  const newUtilities = {}
 
-      addBase({
-        'h1': { fontSize: theme('fontSize.2xl') },
-        'h2': { fontSize: theme('fontSize.xl') },
-      })
-
-      /**
-       * Static utilities
-       * https://tailwindcss.com/docs/plugins#static-utilities
-       */
-
-      addUtilities({
-        '.content-hidden': {
-          'content-visibility': 'hidden',
-        },
-        '.content-visible': {
-          'content-visibility': 'visible',
-        },
-      })
-
-      /**
-       * Dynamic utilities
-       * https://tailwindcss.com/docs/plugins#dynamic-utilities
-       */
-
-      matchUtilities(
-        {
-          tab: value => ({
-            tabSize: value
-          }),
-        },
-        { values: theme('tabSize') }
-      )
-
-      /**
-       * Adding components
-       * https://tailwindcss.com/docs/plugins#adding-components
-       */
-
-      addComponents({
-        [`.${className}`]: {
-          padding: '.5rem 1rem',
-          fontWeight: '600',
-        },
-      })
-
-      /**
-       * Add variants
-       * https://tailwindcss.com/docs/plugins#adding-variants
-       */
-
-      addVariant('optional', '&:optional')
-
-      addVariant('foo', ctx => {
-        // Do stuff with ctx
-        return `.foo ${ctx.container.nodes[0].selector}`
-      })
-    }
-  }, function (options) {
-    /**
-     * Provide default values
-     */
-    return {
-      theme: {
-        tabSize: {
-          1: '1',
-          2: '2',
-          4: '4',
-          8: '8',
+  Object.keys(colors).forEach((colorsKey) => {
+    const color = colors[colorsKey]
+    if (typeof color === 'object' && colorsKey !== 'DEFAULT') {
+      Object.keys(color).forEach((colorKey) => {
+        const value = color[colorKey]
+        newUtilities[`.ion-bg-${colorsKey}-${colorKey}`] = {
+          '--background': value,
         }
-      },
+      })
+    } else {
+      newUtilities[`.ion-bg-${colorsKey}`] = {
+        '--background': color,
+      }
     }
-  }
-)
+  })
 
-module.exports = examplePlugin
+  Object.keys(borderRadius).forEach((borderRadiusKey) => {
+    const value = borderRadius[borderRadiusKey]
+    const key = borderRadiusKey === 'DEFAULT' ? `.ion-rounded` : `.ion-rounded-${borderRadiusKey}`
+    newUtilities[key] = {
+      '--border-radius': value,
+    }
+  })
+
+  Object.keys(spacing).forEach((spacingKey) => {
+    const value = spacing[spacingKey]
+    newUtilities[`.ion-p-${spacingKey}`] = {
+      '--padding-top': value,
+      '--padding-bottom': value,
+      '--padding-start': value,
+      '--padding-end': value,
+    }
+    newUtilities[`.ion-px-${spacingKey}`] = {
+      '--padding-start': value,
+      '--padding-end': value,
+    }
+    newUtilities[`.ion-py-${spacingKey}`] = {
+      '--padding-top': value,
+      '--padding-bottom': value,
+    }
+    newUtilities[`.ion-pt-${spacingKey}`] = {
+      '--padding-top': value,
+    }
+    newUtilities[`.ion-pb-${spacingKey}`] = {
+      '--padding-bottom': value,
+    }
+    newUtilities[`.ion-pl-${spacingKey}`] = {
+      '--padding-start': value,
+    }
+    newUtilities[`.ion-pr-${spacingKey}`] = {
+      '--padding-end': value,
+    }
+  })
+
+  addUtilities(newUtilities)
+})
+
+module.exports = ionicPlugin

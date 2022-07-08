@@ -1,5 +1,5 @@
 const path = require('path')
-const examplePlugin = require('.')
+const ionicPlugin = require('.')
 const postcss = require('postcss')
 const tailwindcss = require('tailwindcss')
 
@@ -7,10 +7,10 @@ function run(config, css = '@tailwind utilities', plugin = tailwindcss) {
   let { currentTestName } = expect.getState()
   config = {
     ...{
-      plugins: [examplePlugin],
+      plugins: [ionicPlugin],
       corePlugins: {
         preflight: false,
-      }
+      },
     },
     ...config,
   }
@@ -20,102 +20,126 @@ function run(config, css = '@tailwind utilities', plugin = tailwindcss) {
   })
 }
 
-it('addBase', () => {
+it('addUtilities - padding', () => {
   const config = {
-    content: [{ raw: String.raw`<h1>Level 1</h1><h2>Level 2</h2>` }],
-    corePlugins: {
-      preflight: true,
-    },
-  }
-
-  return run(config, '@tailwind base; @tailwind utilities').then(result => {
-    const h1 = String.raw`h1 {
-  font-size: 1.5rem;
-}`
-    const h2 = String.raw`h2 {
-  font-size: 1.25rem;
-}`
-
-    expect(result.css).toContain(h1)
-    expect(result.css).toContain(h2)
-  })
-})
-
-it('addUtilities', () => {
-  const config = {
-    content: [{ raw: String.raw`
-    <div class="content-hidden"></div>
-    <div class="content-visible"></div>`
-  }],
-  }
-
-  return run(config).then(result => {
-    expect(result.css).toMatchCss(String.raw`
-      .content-hidden {
-        content-visibility: hidden;
-      }
-
-      .content-visible {
-        content-visibility: visible;
-      }
-    `)
-  })
-})
-
-it('matchUtilities', () => {
-  const config = { content: [{ raw: String.raw`<div class="tab-2"></div>` }],
-  }
-
-  return run(config).then(result => {
-    expect(result.css).toMatchCss(String.raw`
-      .tab-2 {
-        tab-size: 2;
-      }
-    `)
-  })
-})
-
-it('addComponents', () => {
-  const config = {
-    content: [{ raw: String.raw`<div class="btn"></div>` }],
-    plugins: [
-      examplePlugin({
-        className: 'btn',
-      })
+    content: [
+      {
+        raw: String.raw`
+        <div class="ion-p-4"></div>
+        <div class="ion-px-4"></div>
+        <div class="ion-py-4"></div>
+        <div class="ion-pt-4"></div>
+        <div class="ion-pb-4"></div>
+        <div class="ion-pl-4"></div>
+        <div class="ion-pr-4"></div>
+        `,
+      },
     ],
   }
 
-  return run(config, '@tailwind components').then(result => {
+  return run(config).then((result) => {
     expect(result.css).toMatchCss(String.raw`
-      .btn {
-        padding: .5rem 1rem;
-        font-weight: 600;
-      }
+    .ion-p-4 {
+      --padding-top: 1rem;
+      --padding-bottom: 1rem;
+      --padding-start: 1rem;
+      --padding-end: 1rem;
+    }
+    .ion-px-4 {
+      --padding-start: 1rem;
+      --padding-end: 1rem;
+    }
+    .ion-py-4 {
+      --padding-top: 1rem;
+      --padding-bottom: 1rem;
+    }
+    .ion-pt-4 {
+      --padding-top: 1rem;
+    }
+    .ion-pb-4 {
+      --padding-bottom: 1rem;
+    }
+    .ion-pl-4 {
+      --padding-start: 1rem;
+    }
+    .ion-pr-4 {
+      --padding-end: 1rem;
+    }
     `)
   })
 })
 
-it('addVariant', () => {
-  const config = { content: [{ raw: String.raw`<div class="optional:hidden"></div>` }],
+it('addUtilities - border-radius', () => {
+  const config = {
+    content: [
+      {
+        raw: String.raw`
+        <div class="ion-rounded-none"></div>
+        <div class="ion-rounded-sm"></div>
+        <div class="ion-rounded"></div>
+        <div class="ion-rounded-md"></div>
+        <div class="ion-rounded-lg"></div>
+        <div class="ion-rounded-xl"></div>
+        <div class="ion-rounded-2xl"></div>
+        <div class="ion-rounded-3xl"></div>
+        <div class="ion-rounded-full"></div>
+        `,
+      },
+    ],
   }
 
-  return run(config).then(result => {
+  return run(config).then((result) => {
     expect(result.css).toMatchCss(String.raw`
-      .optional\:hidden:optional {
-        display: none;
-      }
+    .ion-rounded-none {
+      --border-radius: 0px;
+    }
+    .ion-rounded-sm {
+      --border-radius: 0.125rem;
+    }
+    .ion-rounded {
+      --border-radius: 0.25rem;
+    }
+    .ion-rounded-md {
+      --border-radius: 0.375rem;
+    }
+    .ion-rounded-lg {
+      --border-radius: 0.5rem;
+    }
+    .ion-rounded-xl {
+      --border-radius: 0.75rem;
+    }
+    .ion-rounded-2xl {
+      --border-radius: 1rem;
+    }
+    .ion-rounded-3xl {
+      --border-radius: 1.5rem;
+    }
+    .ion-rounded-full {
+      --border-radius: 9999px;
+    }
     `)
   })
 })
 
-it('addVariant (function)', () => {
-  const config = { content: [{ raw: String.raw`<div class="foo:hidden"></div>` }],
+it('addUtilities - colors', () => {
+  const config = {
+    content: [
+      {
+        raw: String.raw`
+        <div class="ion-bg-black"></div>
+        <div class="ion-bg-neutral-500"></div>
+        `,
+      },
+    ],
   }
 
-  return run(config).then(result => {
+  return run(config).then((result) => {
     expect(result.css).toMatchCss(String.raw`
-      .foo .hidden {
-        display: none;
+      .ion-bg-black {
+        --background: #000;
+      }
+      .ion-bg-neutral-500 {
+        --background: #737373;
       }
     `)
   })
