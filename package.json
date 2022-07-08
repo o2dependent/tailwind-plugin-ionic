@@ -1,6 +1,6 @@
 {
   "name": "tailwind-plugin-ionic",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A short description of the plugin",
   "main": "src/index.js",
   "scripts": {
