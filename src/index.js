@@ -15,10 +15,16 @@ const ionicPlugin = plugin(({ addBase, addComponents, addUtilities, theme }) => 
         newUtilities[`.ion-bg-${colorsKey}-${colorKey}`] = {
           '--background': value,
         }
+        newUtilities[`.ion-text-${colorsKey}-${colorKey}`] = {
+          '--color': value,
+        }
       })
     } else {
       newUtilities[`.ion-bg-${colorsKey}`] = {
         '--background': color,
+      }
+      newUtilities[`.ion-text-${colorsKey}`] = {
+        '--color': color,
       }
     }
   })
