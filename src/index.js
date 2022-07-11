@@ -18,6 +18,18 @@ const ionicPlugin = plugin(({ addBase, addComponents, addUtilities, theme }) => 
         newUtilities[`.ion-text-${colorsKey}-${colorKey}`] = {
           '--color': value,
         }
+        newUtilities[`.ion-border-${colorsKey}-${colorKey}`] = {
+          '--border-color': value,
+        }
+        newUtilities[`.ion-highlight-focus-${colorsKey}-${colorKey}`] = {
+          '--highlight-color-focused': value,
+        }
+        newUtilities[`.ion-highlight-valid-${colorsKey}-${colorKey}`] = {
+          '--highlight-color-valid': value,
+        }
+        newUtilities[`.ion-highlight-invalid-${colorsKey}-${colorKey}`] = {
+          '--highlight-color-invalid': value,
+        }
       })
     } else {
       newUtilities[`.ion-bg-${colorsKey}`] = {
@@ -25,6 +37,9 @@ const ionicPlugin = plugin(({ addBase, addComponents, addUtilities, theme }) => 
       }
       newUtilities[`.ion-text-${colorsKey}`] = {
         '--color': color,
+      }
+      newUtilities[`.ion-border-${colorsKey}`] = {
+        '--border-color': color,
       }
     }
   })
