@@ -42,5 +42,10 @@
   },
   "keywords": [
     "tailwindcss"
-  ]
+  ],
+  "np": {
+    "yarn": true,
+    "contents": "src",
+    "branch": "main"
+  }
 }
